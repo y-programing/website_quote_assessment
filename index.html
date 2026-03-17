@@ -10,7 +10,9 @@
   .question { margin-bottom: 20px; }
   .btn { display: block; margin: 5px 0; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; width: 100%; border-radius: 5px; font-size: 16px; }
   .btn:hover { background-color: #45a049; }
-  #result { font-weight: bold; font-size: 18px; margin-top: 20px; }
+  #result { font-weight: bold; font-size: 16px; margin-top: 20px; }
+  .pages { margin-top: 10px; padding: 10px; background-color: #f0f0f0; border-radius: 5px; }
+  .pages li { margin-bottom: 5px; }
 </style>
 </head>
 <body>
@@ -40,9 +42,16 @@ const questions = [
   {
     question: "Q3. CMS・WordPress導入は必要？",
     options: [
-        { text: "はい", points: 2 },
-        { text: "いいえ", points: 1 }
-
+      { text: "はい", points: 2 },
+      { text: "いいえ", points: 1 }
+    ]
+  },
+  {
+    question: "Q4. SEO対策の予定はありますか？",
+    options: [
+      { text: "SEO対策なし", points: 0 },
+      { text: "SEOの基本対策を実装したい", points: 1 },
+      { text: "ガッツリ実装したい", points: 2 }
     ]
   }
 ];
@@ -80,13 +89,30 @@ function showQuestion() {
 
 function showResult() {
   container.innerHTML = "";
-  let estimate;
-  if(totalPoints <= 4) estimate = "10〜15万円";
-  else if(totalPoints <= 6) estimate = "16〜25万円";
-  else estimate = "26万円以上";
+  let estimate, pages;
 
-  resultDiv.innerHTML = `あなたのサイト制作費用の目安は <span style="color:#e91e63">${estimate}</span> です。<br>
-  <a href="https://codesnow.jp/contact" target="_blank">お問い合わせはこちら</a>`;
+  // 制作費用と構成ページの目安
+  if(totalPoints <= 4){
+    estimate = "10〜15万円";
+    pages = ["トップページ", "サービスページ", "お問い合わせページ"];
+  } else if(totalPoints <= 6){
+    estimate = "16〜25万円";
+    pages = ["トップページ", "サービスページ", "ブログページ", "お問い合わせページ", "会社情報ページ"];
+  } else {
+    estimate = "26万円以上";
+    pages = ["トップページ", "サービスページ", "ブログページ", "お問い合わせページ", "会社情報ページ", "ポートフォリオページ", "FAQページ", "ニュースページ"];
+  }
+
+  resultDiv.innerHTML = `
+    あなたのサイト制作費用の目安は <span style="color:#e91e63">${estimate}</span> です。
+    <div class="pages">
+      <strong>構成ページ例:</strong>
+      <ul>
+        ${pages.map(p => `<li>${p}</li>`).join('')}
+      </ul>
+    </div>
+    <a href="https://codesnow.jp/contact" target="_blank" style="display:block; margin-top:10px;">お問い合わせはこちら</a>
+  `;
 }
 
 showQuestion();
