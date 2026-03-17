@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>制作費用診断ツール</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; max-width: 500px; margin: auto; }
+  .question { margin-bottom: 20px; }
+  .btn { display: block; margin: 5px 0; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; width: 100%; border-radius: 5px; font-size: 16px; }
+  .btn:hover { background-color: #45a049; }
+  #result { font-weight: bold; font-size: 18px; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<h1>制作費用診断ツール</h1>
+<div id="quiz-container"></div>
+<div id="result"></div>
+
+<script>
+const questions = [
+  {
+    question: "Q1. サイトの規模は？",
+    options: [
+      { text: "1〜5ページ（小規模）", points: 1 },
+      { text: "6〜10ページ（中規模）", points: 2 },
+      { text: "11ページ以上（大規模）", points: 3 }
+    ]
+  },
+  {
+    question: "Q2. デザインの自由度は？",
+    options: [
+      { text: "テンプレート使用（低コスト）", points: 1 },
+      { text: "少しカスタマイズ（中コスト）", points: 2 },
+      { text: "フルデザイン（高コスト）", points: 3 }
+    ]
+  },
+  {
+    question: "Q3. CMS・WordPress導入は必要？",
+    options: [
+        { text: "はい", points: 2 },
+        { text: "いいえ", points: 1 }
+
+    ]
+  }
+];
+
+let currentQuestion = 0;
+let totalPoints = 0;
+
+const container = document.getElementById("quiz-container");
+const resultDiv = document.getElementById("result");
+
+function showQuestion() {
+  container.innerHTML = "";
+  const q = questions[currentQuestion];
+  const qDiv = document.createElement("div");
+  qDiv.className = "question";
+  qDiv.textContent = q.question;
+  container.appendChild(qDiv);
+
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "btn";
+    btn.textContent = opt.text;
+    btn.onclick = () => {
+      totalPoints += opt.points;
+      currentQuestion++;
+      if(currentQuestion < questions.length){
+        showQuestion();
+      } else {
+        showResult();
+      }
+    };
+    container.appendChild(btn);
+  });
+}
+
+function showResult() {
+  container.innerHTML = "";
+  let estimate;
+  if(totalPoints <= 4) estimate = "10〜15万円";
+  else if(totalPoints <= 6) estimate = "16〜25万円";
+  else estimate = "26万円以上";
+
+  resultDiv.innerHTML = `あなたのサイト制作費用の目安は <span style="color:#e91e63">${estimate}</span> です。<br>
+  <a href="https://codesnow.jp/contact" target="_blank">お問い合わせはこちら</a>`;
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
